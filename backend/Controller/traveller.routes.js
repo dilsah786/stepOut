@@ -47,12 +47,12 @@ travellerRouter.post("/book", async (req, res) => {
   } = req.body;
 
   const availableTrain = await TrainModel.findOne({
-    trainNumber:trainNumber
+    trainNumber: trainNumber,
   });
 
   console.log(availableTrain.seats);
 
-//   return;
+  //   return;
 
   let availableSeats = availableTrain.seats;
 
@@ -67,11 +67,10 @@ travellerRouter.post("/book", async (req, res) => {
   }
 
   const updateTrainSeats = await TrainModel.findOneAndUpdate(
-    { source: source, destination: destination ,trainNumber:trainNumber},
+    { source: source, destination: destination, trainNumber: trainNumber },
     { seats: availableSeats },
     { new: true }
   );
-
 
   try {
     const newBooking = await BookingModel.create({
@@ -80,7 +79,7 @@ travellerRouter.post("/book", async (req, res) => {
       email,
       mobile,
       address,
-      trainName:availableTrain.trainName,
+      trainName: availableTrain.trainName,
       trainNumber,
       source,
       destination,
@@ -90,20 +89,30 @@ travellerRouter.post("/book", async (req, res) => {
       userId,
     });
 
-    return res.json({message:"You have successfully booked a ticket",data:newBooking})
+    return res.json({
+      message: "You have successfully booked a ticket",
+      data: newBooking,
+    });
   } catch (err) {
     console.log(err);
   }
 });
 
+travellerRouter.get("/bookings/:bookingId", async (req, res) => {
+  const { bookingId } = req.params;
 
+  console.log(bookingId);
 
-
-
-
-
-
-
-
+  try {
+    const bookingDetails = await BookingModel.findOne({ bookingId: bookingId });
+    
+    return res.json({
+      message: "Here is your booking detail",
+      Details: bookingDetails,
+    });
+  } catch (err) {
+    console.log("Facing some issue while getting the booking details");
+  }
+});
 
 module.exports = { travellerRouter };
