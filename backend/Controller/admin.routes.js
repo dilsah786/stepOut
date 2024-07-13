@@ -8,14 +8,21 @@ require("dotenv").config();
 let accessBy = process.env.accessBy;
 
 adminRouter.post("/train", async (req, res) => {
-  let { trainName, trainNumber, source, destination, seats, userId } = req.body;
+  let { trainName, trainNumber, source, destination, seats, userId } =
+    req.body;
 
-  if (!trainName || !trainNumber || !source || !destination || !seats ) {
+  if (
+    !trainName ||
+    !trainNumber ||
+    !source ||
+    !destination ||
+    !seats
+  ) {
     return res.json({ message: "Please fill all fields" });
   }
 
-  if((seats*1)>500){
-      return res.json({message:"You can not add more than 500 seats"})
+  if (seats * 1 > 500) {
+    return res.json({ message: "You can not add more than 500 seats" });
   }
 
   trainName = trainName.toLowerCase();
