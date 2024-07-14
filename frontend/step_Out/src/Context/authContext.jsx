@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import { api } from "../../config";
+import { Navigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -7,10 +8,32 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [token,setToken] = useState("null")
-  // const history = useHistory();
+  const [token, setToken] = useState("");
 
-// Function for registering the user
+
+
+
+
+
+
+ console.log(isAuthenticated);
+
+
+
+
+
+
+
+
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const register = async (e, name, email, password) => {
     e.preventDefault();
 
@@ -29,16 +52,13 @@ export const AuthContextProvider = ({ children }) => {
       const res = await result.json();
       setIsAuthenticated(true);
     } catch (err) {
-      console.log("Error occured while registering a new user", err);
+      console.log("Error occurred while registering a new user", err);
     }
   };
 
-
-  // Function for logging the user
-
   const login = async (e, email, password) => {
     e.preventDefault();
-
+    
     try {
       const result = await fetch(`${api}/login`, {
         method: "POST",
@@ -51,25 +71,22 @@ export const AuthContextProvider = ({ children }) => {
         }),
       });
       const res = await result.json();
-      console.log(res);
+      setToken(res.token);
       setIsAuthenticated(true);
-
+      localStorage.setItem("token", JSON.stringify(res.token));
     } catch (err) {
-      console.log("Error occured while loggin in a new user", err);
+      console.log("Error occurred while logging in a user", err);
     }
-
-    // history.push('/');
   };
 
   const logout = () => {
     setIsAuthenticated(false);
-    // history.push('/login');
+    setToken("");
+    localStorage.removeItem("token");
   };
 
-
-
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, register }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, register, token }}>
       {children}
     </AuthContext.Provider>
   );
