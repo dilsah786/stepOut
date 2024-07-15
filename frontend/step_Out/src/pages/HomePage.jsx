@@ -1,35 +1,17 @@
-import React, { useContext } from 'react'
-import { AuthContext } from '../Context/authContext'
-
+import React, { useContext } from "react";
+import { AuthContext } from "../Context/authContext";
+import TrainSearch from "./TrainSearch";
 
 const HomePage = () => {
+  const { token } = useContext(AuthContext);
 
-    const {token} = useContext(AuthContext)
-
-    console.log(token);
+  console.log(token);
 
   return (
     <div>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
-      <h1>Hello Irctct Booking app</h1>
+      <TrainSearch />
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;
