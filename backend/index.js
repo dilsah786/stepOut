@@ -1,31 +1,42 @@
 const express = require("express");
 const cors = require("cors");
-const {userController } = require("./Controller/user.routes");
+const { userRouter } = require("./Controller/user.routes");
 const { authentication } = require("./Auth_Middleware/authentication");
 const { connection } = require("./db");
-const {adminRouter } = require("./Controller/admin.routes.js");
-const app = express();
+const { adminRouter } = require("./Controller/admin.routes.js");
+const { travellerRouter } = require("./Controller/traveller.routes.js");
 require("dotenv").config();
 
-app.use(express.json());
-app.use(cors());
+const app = express();
+const PORT = process.env.PORT || 8080;
 
-app.get("/", async (req, res) => {
-  res.json({ message: "Irctc Api is working fine" });
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+
+// Base Route
+app.get("/", (req, res) => {
+  res.json({ message: "IRCTC API is working fine" });
 });
 
-app.use("/", userController);
+// User Routes
+app.use("/", userRouter); 
 
+// Authentication Middleware 
 app.use(authentication);
-
+ 
+// Admin and Traveller Routes
 app.use("/admin", adminRouter);
+app.use("/", travellerRouter);
 
-app.listen(process.env.port || 8080, async () => {
+// Start Server
+app.listen(PORT, async () => {
   try {
     await connection;
-    console.log("App is connected to mongoDB database irctc");
+    console.log("App is connected to MongoDB database IRCTC");
   } catch (err) {
-    console.log(err);
+    console.error("Failed to connect to the database", err);
   }
-  console.log("App is running on port 8080");
+  console.log(`App is running on port ${PORT}`);
 });
